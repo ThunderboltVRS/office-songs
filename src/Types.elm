@@ -21,10 +21,12 @@ type alias Model =
     , allRequests : List SongRequest
     , searchedRequests : List SongRequest
     , people : List String
+    , showPercentages : Bool
     }
 
 type alias Flags =
     {
         people : List String
         , requests : List SongRequest
+        , showPercentages : Bool
     }

@@ -10,12 +10,8 @@ import Material.Textfield
 import Material.Options exposing (Style, css)
 import Material.Layout as Layout
 import Material.Table as Table
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
-import Wheel
-import Html.Events exposing (on)
-import Json.Decode as Json
-import Chart as C exposing (..)
+import Charty.PieChart as PieChart
+import Round
 
 
 view : Model -> Html Msg
@@ -37,17 +33,16 @@ display model =
         , drawer = []
         , tabs = ( [], [] )
         , main =
-            [ additionalCSS
-            , div
-                [][
-                    searchBox model,
-                    pieChart model,
-                    mainTable model
+            [
+                div
+                [ Html.Attributes.class "grid-container"][
+                    div [Html.Attributes.class "grid-item search-item"] [searchBox model],
+                    div [Html.Attributes.class "grid-item chart-item"] [pieChart model],
+                    div [Html.Attributes.class "grid-item table-item"] [mainTable model]
                 ]
             ]
         }
         |> Material.Scheme.topWithScheme Material.Color.Blue Material.Color.LightBlue
-
 
 
 searchBox : Model -> Html Msg
@@ -58,9 +53,10 @@ searchBox model =
         , Material.Textfield.floatingLabel ]
         []
 
+
 mainTable : Model -> Html Msg
 mainTable model =
-    Table.table []
+    Table.table [ Material.Options.css "width" "100%"]
     [ Table.thead []
     [ Table.tr []
         [ Table.th [] [ Html.text "Requester" ]
@@ -79,25 +75,51 @@ mainTable model =
         )
     ]
 
+
 pieChart : Model -> Html Msg
 pieChart model =
-    C.pie (getPieData model)
-    |> C.toHtml
+    let
+        defaults =
+            PieChart.defaults
 
-getPieData : Model -> List (Float, String)
+        colorAssignment =
+            -- Keep color assignment consistent with respect to group names
+            List.sortBy (\{ label } -> label) >> defaults.colorAssignment
+
+        chartConfig =
+            { defaults | colorAssignment = colorAssignment }
+    in
+    Html.div
+      []
+      [ PieChart.view chartConfig (getPieData model)
+      ]
+
+
+getPieData : Model -> PieChart.Dataset
 getPieData model =
-    List.map (\p -> ((getPieCount p model.searchedRequests), p)) model.people
+    List.map (\p -> getPieDataForPerson model p) model.people
 
-getPieCount : String -> List SongRequest -> Float
-getPieCount person songRequests =
-    List.filter (\r -> r.requesterName == person) songRequests 
-    |> List.length 
-    |> toFloat
 
-additionalCSS : Html Msg
-additionalCSS =
-    Material.Options.stylesheet """
-    .mdl-layout__content {
-        height: 100% !important;
-    }
-  """
+getPieDataForPerson : Model -> String -> PieChart.Group
+getPieDataForPerson model person =
+    let numberPerPerson = countPerPerson person model.searchedRequests
+    in
+        {label = getPieLabel model.showPercentages person (List.length model.searchedRequests) numberPerPerson, value = toFloat numberPerPerson}
+
+getPieLabel : Bool -> String -> Int -> Int -> String
+getPieLabel showPercentages personName total forPerson =
+    if showPercentages then
+        personName ++ " " ++ toString forPerson ++ " (" ++ Round.round 2 (getPercentage forPerson total) ++ "%)"
+    else
+        personName ++ " " ++ toString forPerson
+
+getPercentage : Int -> Int -> Float
+getPercentage number total =
+    case number of 
+        0 -> 0
+        _ -> clamp 0 100 (((toFloat number) / (toFloat total)) * 100)
+
+countPerPerson : String -> List SongRequest -> Int
+countPerPerson personName songRequests =
+    List.filter (\r -> r.requesterName == personName) songRequests
+    |> List.length

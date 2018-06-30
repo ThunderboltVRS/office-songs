@@ -16,6 +16,7 @@ initialModel flags =
     , allRequests = flags.requests
     , searchedRequests = flags.requests
     , people = flags.people
+    , showPercentages = flags.showPercentages
     }
 
 
