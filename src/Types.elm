@@ -26,7 +26,6 @@ type alias Model =
 
 type alias Flags =
     {
-        people : List String
-        , requests : List SongRequest
+        requests : List SongRequest
         , showPercentages : Bool
     }

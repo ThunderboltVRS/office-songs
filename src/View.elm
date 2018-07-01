@@ -121,5 +121,6 @@ getPercentage number total =
 
 countPerPerson : String -> List SongRequest -> Int
 countPerPerson personName songRequests =
-    List.filter (\r -> r.requesterName == personName) songRequests
+    songRequests
+    |> List.filter (\r -> r.requesterName == personName)
     |> List.length

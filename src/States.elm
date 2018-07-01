@@ -2,7 +2,7 @@ module States exposing (..)
 
 import Types exposing (..)
 import Material
-
+import List.Extra exposing (uniqueBy)
 
 initialModelWithFlags : Flags -> ( Model, Cmd Msg )
 initialModelWithFlags flags =
@@ -15,7 +15,9 @@ initialModel flags =
     , searchString = ""
     , allRequests = flags.requests
     , searchedRequests = flags.requests
-    , people = flags.people
+    , people = flags.requests
+        |> List.map .requesterName
+        |> uniqueBy toString
     , showPercentages = flags.showPercentages
     }
 
