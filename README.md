@@ -1,4 +1,4 @@
 # office-songs
 Song visualistaion for office song requests. Search by artist name or song name.
 
-More to come.
+[Live Demo](http://ThunderboltVRS.github.io/office-songs/Pages/OfficeSongs.html)
