@@ -1,9 +1,8 @@
 module Update exposing (..)
 
-import Types exposing (..)
-import Char
 import Material
 import Regex
+import Types exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -12,18 +11,34 @@ update msg model =
         Types.Mdl msg ->
             Material.update Mdl msg model
 
-        Search searchText ->
-            (updateSearchString model searchText |> filterResultsOnSearch, Cmd.none)
+        SearchSongs searchText ->
+            ( updateSongSearchString model searchText |> filterResultsOnSearch, Cmd.none )
 
-updateSearchString : Model -> String -> Model
-updateSearchString model searchText =
-    {model | searchString = searchText}
+        SearchRequesters searchText ->
+            ( updateRequesterSearchString model searchText |> filterResultsOnSearch, Cmd.none )
+
+
+updateSongSearchString : Model -> String -> Model
+updateSongSearchString model searchText =
+    { model | searchSongsString = searchText }
+
+
+updateRequesterSearchString : Model -> String -> Model
+updateRequesterSearchString model searchText =
+    { model | searchRequestersString = searchText }
+
 
 filterResultsOnSearch : Model -> Model
 filterResultsOnSearch model =
-    {model | searchedRequests = List.filter (\i -> matchesSearch i model.searchString) model.allRequests }
+    { model | searchedRequests = List.filter (\i -> matchesSearch i model.searchSongsString model.searchRequestersString) model.allRequests }
 
-matchesSearch : SongRequest -> String -> Bool
-matchesSearch songRequest searchText =
-    Regex.contains (Regex.caseInsensitive (Regex.regex searchText)) songRequest.artistName
-    || Regex.contains (Regex.caseInsensitive (Regex.regex searchText)) songRequest.songName
+
+matchesSearch : SongRequest -> String -> String -> Bool
+matchesSearch songRequest searchSongsText searchRequestersText =
+    (match searchSongsText songRequest.artistName || match searchSongsText songRequest.songName)
+        && (searchRequestersText == "" || match searchRequestersText songRequest.requesterName)
+
+
+match : String -> String -> Bool
+match conatined inside =
+    Regex.contains (Regex.caseInsensitive (Regex.regex conatined)) inside

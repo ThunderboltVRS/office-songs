@@ -1,11 +1,13 @@
 module Types exposing (..)
 
 import Material
+import Random exposing (Seed)
 
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | Search String
+    | SearchSongs String
+    | SearchRequesters String
 
 
 type alias SongRequest =
@@ -17,15 +19,18 @@ type alias SongRequest =
 
 type alias Model =
     { mdl : Material.Model
-    , searchString : String
+    , searchSongsString : String
+    , searchRequestersString : String
     , allRequests : List SongRequest
     , searchedRequests : List SongRequest
     , people : List String
     , showPercentages : Bool
+    , randomSeed : Random.Seed
     }
 
+
 type alias Flags =
-    {
-        requests : List SongRequest
-        , showPercentages : Bool
+    { randomSeed : Float
+    , requests : List SongRequest
+    , showPercentages : Bool
     }

@@ -1,10 +1,11 @@
 module Main exposing (..)
 
 import Html
-import View exposing (..)
 import States exposing (..)
-import Update exposing (..)
 import Types exposing (..)
+import Update exposing (..)
+import View exposing (..)
+
 
 main : Program Flags Model Msg
 main =
