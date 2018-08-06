@@ -4,23 +4,17 @@ module Page.Stats exposing (view)
 import Charty.PieChart as PieChart
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Material.Color as Color
-import Material.Layout as Layout
-import Material.Options as Options exposing (Style, css)
-import Material.Scheme
-import Material.Table as Table
-import Material.Textfield
-import Material.Typography as Typo
 import Round
 import Types exposing (..)
 
 
 view : Model -> Html Msg
 view model =
-    div
-                [ Html.Attributes.class "stats-grid-container" ]
-                [ div [ Html.Attributes.class "grid-item chart-item" ] [ pieChart model ]
-                ]
+    -- div
+    --             [ Html.Attributes.class "stats-grid-container" ]
+    --             [ 
+                    div [ Html.Attributes.class "grid-item chart-item" ] [ pieChart model ]
+                -- ]
     
 
 
@@ -37,10 +31,8 @@ pieChart model =
         chartConfig =
             { defaults | colorAssignment = colorAssignment }
     in
-    Html.div
-        []
-        [ PieChart.view chartConfig (getPieData model)
-        ]
+        PieChart.view chartConfig (getPieData model)
+
 
 
 getPieData : Model -> PieChart.Dataset
