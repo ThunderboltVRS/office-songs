@@ -2,12 +2,16 @@ module Types exposing (..)
 
 import Material
 import Random exposing (Seed)
+import Material.Color as Color
 
 
 type Msg
     = Mdl (Material.Msg Msg)
     | SearchSongs String
     | SearchRequesters String
+    | SelectTab Int
+    | Raise String
+    | Lower String
 
 
 type alias SongRequest =
@@ -26,6 +30,12 @@ type alias Model =
     , people : List String
     , showPercentages : Bool
     , randomSeed : Random.Seed
+    , selectedTab : Int
+    , raisedId : String
+    , primaryColor : Color.Hue
+    , accentColor : Color.Hue
+    , primaryShade : Color.Shade
+    , accentShade : Color.Shade
     }
 
 

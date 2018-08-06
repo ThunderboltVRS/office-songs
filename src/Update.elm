@@ -17,6 +17,15 @@ update msg model =
         SearchRequesters searchText ->
             ( updateRequesterSearchString model searchText |> filterResultsOnSearch, Cmd.none )
 
+        SelectTab k ->
+            ( { model | selectedTab = k }, Cmd.none )
+
+        Raise k ->
+            { model | raisedId = k } ! []
+
+        Lower k ->
+            { model | raisedId = k } ! [] 
+
 
 updateSongSearchString : Model -> String -> Model
 updateSongSearchString model searchText =

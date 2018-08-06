@@ -5,6 +5,7 @@ import Material
 import Random exposing (Seed)
 import RandomUtil exposing (shuffle)
 import Types exposing (..)
+import Material.Color as Color
 
 
 initialModelWithFlags : Flags -> ( Model, Cmd Msg )
@@ -29,6 +30,12 @@ initialModel flags =
             |> uniqueBy toString
     , showPercentages = flags.showPercentages
     , randomSeed = Tuple.second suffleResult
+    , selectedTab = 0
+    , raisedId = ""
+    , primaryColor = Color.Blue
+    , accentColor = Color.LightBlue
+    , primaryShade = Color.S50
+    , accentShade = Color.S50
     }
 
 
