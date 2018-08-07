@@ -20,6 +20,12 @@ type alias SongRequest =
     , songName : String
     }
 
+type alias Stats =
+    {
+    person : String
+    , numberPerPerson : Int
+    , percentage : Float
+    }
 
 type alias Model =
     { mdl : Material.Model

@@ -1,16 +1,11 @@
 module Page.Requests exposing (view)
 
-import Charty.PieChart as PieChart
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Material.Color as Color
-import Material.Layout as Layout
 import Material.Options as Options exposing (Style, css)
-import Material.Scheme
 import Material.Table as Table
 import Material.Textfield
 import Material.Typography as Typo
-import Round
 import Types exposing (..)
 
 
@@ -25,22 +20,11 @@ view model =
 display : Model -> Html Msg
 display model =
     div
-                [ Html.Attributes.class "requests-grid-container" ]
-                [ div [ Html.Attributes.class "grid-item search-songs-item" ] [ searchSongsBox model ]
-                , div [ Html.Attributes.class "grid-item search-requesters-item" ] [ searchRequestersBox model ]
-                , div [ Html.Attributes.class "grid-item counter-item" ] [ counter model ]
-                , div [ Html.Attributes.class "grid-item table-item" ] [ mainTable model ]
-                ]
-
-
-counter : Model -> Html Msg
-counter model =
-    Options.styled p
-        [ Typo.display3 ]
-        [ text (List.length model.allRequests 
-                |> toString 
-                |> (++) "/" 
-                |> (++) (toString (List.length model.searchedRequests))) ]
+        [ Html.Attributes.class "requests-grid-container" ]
+        [ div [ Html.Attributes.class "grid-item search-songs-item" ] [ searchSongsBox model ]
+        , div [ Html.Attributes.class "grid-item search-requesters-item" ] [ searchRequestersBox model ]
+        , div [ Html.Attributes.class "grid-item table-item" ] [ mainTable model ]
+        ]
 
 
 searchSongsBox : Model -> Html Msg
@@ -78,9 +62,9 @@ mainTable model =
     Table.table [ Options.css "width" "100%" ]
         [ Table.thead []
             [ Table.tr []
-                [ Table.th [] [ Html.text "Artist" ]
-                , Table.th [] [ Html.text "Song" ]
-                , Table.th [] [ Html.text "Requester" ]
+                [ Table.th [ Options.css "width" "33%"] [ Html.text "Song" ]
+                , Table.th [Options.css "width" "33%"] [ Html.text "Artist" ]
+                , Table.th [Options.css "width" "33%"] [ Html.text "Requester" ]
                 ]
             ]
         , Table.tbody []
@@ -88,8 +72,8 @@ mainTable model =
                 |> List.map
                     (\request ->
                         Table.tr []
-                            [ Table.td [] [ Html.text request.artistName ]
-                            , Table.td [] [ Html.text request.songName ]
+                            [ Table.td [] [ Html.text request.songName ]
+                            , Table.td [] [ Html.text request.artistName ]
                             , Table.td [] [ Html.text request.requesterName ]
                             ]
                     )

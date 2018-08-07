@@ -1,16 +1,12 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (href, class, style, id, height, width)
 import Html.Lazy
-import Platform.Cmd exposing (..)
 import Array exposing (Array)
 import Dict exposing (Dict)
 import String
 import Navigation
 import RouteUrl as Routing
-import Material
-import Material.Color as Color
 import Material.Layout as Layout
 import Material.Options as Options exposing (styled, css)
 import Material.Typography as Typography
@@ -19,6 +15,8 @@ import Page.Stats
 import Types exposing (..)
 import States exposing (..)
 import Update exposing (update)
+import Material.Textfield as Textfield
+import Material.Color as Color
 
 
 -- APP
@@ -62,11 +60,9 @@ view_ model =
             , drawer = drawer model
             , tabs =
                 ( tabTitles
-                , [ 
-                    --Color.background (Color.color model.primaryColor model.primaryShade) 
-                    ] 
+                , [] 
                 )
-            , main = [ stylesheet, top ]
+            , main = [ top ]
             }
 
 
@@ -134,13 +130,23 @@ newHeader model =
         [ css "height" "50px"
         , css "transition" "height 333ms ease-in-out 0s"
         ]
-        [ Layout.title [] [ text "Office Songs" ]
+        [ Layout.title [] [ text "Song Requests" ]
         , Layout.spacer
         , Layout.navigation []
             [ 
-                -- Layout.link
-                -- [ Options.onClick ToggleHeader]
-                -- [ Icon.i "photo" ]
+                -- Textfield.render Mdl
+                --     [ 29 ]
+                --     model.mdl
+                --     [ Options.onInput SearchSongs
+                --     , Textfield.autofocus
+                --     , Textfield.label "Search"
+                --     , Textfield.text_
+                --     , Textfield.value model.searchSongsString
+                --     , Textfield.expandableIcon "search"
+                --     , Color.text Color.white
+                --     --, Color.background Color.white
+                --     ]
+                --     []
             ]
         ]
     ]
@@ -177,58 +183,3 @@ location2messages location =
                 |> Maybe.withDefault -1
                 |> SelectTab
     ]
-
-
-
--- CSS
-
-
-stylesheet : Html a
-stylesheet =
-    Options.stylesheet ""
--- """
---   /* The following line is better done in html. We keep it here for
---      compatibility with elm-reactor.
---    */
---   @import url("assets/highlight/github-gist.css");
-
---   blockquote:before { content: none; }
---   blockquote:after { content: none; }
---   blockquote {
---     border-left-style: solid;
---     border-width: 1px;
---     padding-left: 1.3ex;
---     border-color: rgb(255,82,82);
---       /* Really need a way to specify "secondary color" in
---          inline css.
---        */
---     font-style: normal;
---   }
-
---   pre {
---     display: inline-block;
---     -- box-sizing: border-box;
---     min-width: 100%;
---     padding-top: .5rem;
---     padding-bottom: 1rem;
---     padding-left:1rem;
---     margin: 0;
---   }
---   code {
---     font-family: 'Roboto Mono';
---   }
---   .mdl-layout__content{
---       background-color: lightpink;
---   }
---   .mdl-grid.center-items {
---     justify-content: center;
---   }
---   .mdl-grid {
---       justify-content: center;
---   }
---   .mdl-layout__header--transparent .mdl-layout__drawer-button {
---     /* This background is dark, so we set text to white. Use 87% black instead if
---        your background is light. */
---     color: white;
---   }
--- """
