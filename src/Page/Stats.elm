@@ -82,8 +82,8 @@ personCard model person =
                     ]
                     [ text (percentageToString stats.percentage) ]
                 , Layout.spacer
-                , Options.span []
-                    [ text (toString stats.numberPerPerson ++ "/" ++ toString (List.length model.allRequests))
+                , Options.span [ css "float" "right", css "opacity" "0.6"]
+                    [ text (toString stats.numberPerPerson)
                     ]
                 ]
             ]
