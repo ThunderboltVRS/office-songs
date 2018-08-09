@@ -6,12 +6,8 @@ import Html.Attributes exposing (..)
 import Material.Card as Card
 import Material.Color as Color
 import Material.Elevation as Elevation
-import Material.Icon as Icon
 import Material.Layout as Layout
 import Material.Options as Options exposing (Style, css)
-import Material.Scheme
-import Material.Table as Table
-import Material.Textfield
 import Material.Typography as Typography
 import Round
 import Types exposing (..)
@@ -85,10 +81,9 @@ personCard model person =
                     , Color.text Color.primary
                     ]
                     [ text (percentageToString stats.percentage) ]
-                    , Layout.spacer
-                    , Options.span [] 
-                    [
-                        text (toString stats.numberPerPerson ++ "/" ++ toString (List.length model.allRequests))
+                , Layout.spacer
+                , Options.span []
+                    [ text (toString stats.numberPerPerson ++ "/" ++ toString (List.length model.allRequests))
                     ]
                 ]
             ]

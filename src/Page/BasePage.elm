@@ -1,21 +1,21 @@
 module Page.BasePage
     exposing
-        ( demo
-        , package
-        , mds
-        , mdl
+        ( background
         , body1
-        , body2
         , body1_
-        , background
+        , body2
+        , demo
+        , mdl
+        , mds
+        , package
         )
 
 import Html exposing (..)
-import Html.Attributes exposing (href, class)
+import Html.Attributes exposing (class, href)
 import Markdown
-import Material.Grid exposing (..)
-import Material.Options as Options exposing (styled, cs, css)
 import Material.Color as Color
+import Material.Grid exposing (..)
+import Material.Options as Options exposing (cs, css, styled)
 
 
 --import Material.Typography as Typography

@@ -2,10 +2,10 @@ module States exposing (..)
 
 import List.Extra exposing (uniqueBy)
 import Material
+import Material.Color as Color
 import Random exposing (Seed)
 import RandomUtil exposing (shuffle)
 import Types exposing (..)
-import Material.Color as Color
 
 
 initialModelWithFlags : Flags -> ( Model, Cmd Msg )

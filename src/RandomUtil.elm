@@ -33,7 +33,7 @@ shuffle values =
         values ->
             let
                 randomIndexGenerator =
-                    Random.int 0 <| (List.length values) - 1
+                    Random.int 0 <| List.length values - 1
 
                 extractAndRecurse =
                     \index ->
@@ -44,6 +44,6 @@ shuffle values =
                             remainderGen =
                                 shuffle remainder
                         in
-                            Random.map (\randomTail -> randomHead :: randomTail) remainderGen
+                        Random.map (\randomTail -> randomHead :: randomTail) remainderGen
             in
-                Random.andThen extractAndRecurse randomIndexGenerator
+            Random.andThen extractAndRecurse randomIndexGenerator
