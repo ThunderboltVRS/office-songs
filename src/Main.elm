@@ -134,24 +134,26 @@ newHeader model =
         [ Layout.title [] [ text "Song Requests" ]
         , Layout.spacer
         , Layout.navigation []
-            [ Options.span
-                [ Typography.display2
+            [ 
+                -- Textfield.render Mdl
+                -- [ 29 ]
+                -- model.mdl
+                -- [ Options.onInput SearchSongs
+                -- , Textfield.autofocus
+                -- , Textfield.label "Search"
+                -- , Textfield.text_
+                -- , Textfield.value model.searchSongsString
+                -- , Textfield.expandableIcon "search"
+                -- , Color.text Color.white
+                -- , css "border-color" "white"
+                -- , css "color" "white"
+                -- --, Color.background Color.white
+                -- ]
+                -- []
+             Options.span
+                [ Typography.display1
                 ]
                 [ text (toString (List.length model.allRequests) ++ " Songs") ]
-
-            -- Textfield.render Mdl
-            --     [ 29 ]
-            --     model.mdl
-            --     [ Options.onInput SearchSongs
-            --     , Textfield.autofocus
-            --     , Textfield.label "Search"
-            --     , Textfield.text_
-            --     , Textfield.value model.searchSongsString
-            --     , Textfield.expandableIcon "search"
-            --     , Color.text Color.white
-            --     --, Color.background Color.white
-            --     ]
-            --     []
             ]
         ]
     ]

@@ -72,8 +72,11 @@ personCard model person =
                         ]
                         [ text person ]
                     ]
+                    , Card.subhead [ ] [ Options.span [ css "float" "right", css "opacity" "0.6" ]
+                    [ text (toString stats.numberPerPerson)
+                    ]]
                 ]
-            , Card.actions []
+            , Card.actions [Card.border]
                 (list (topThreeArtists stats))
             , Card.menu []
                 [ Options.span
@@ -81,10 +84,6 @@ personCard model person =
                     , Color.text Color.primary
                     ]
                     [ text (percentageToString stats.percentage) ]
-                , Layout.spacer
-                , Options.span [ css "float" "right", css "opacity" "0.6"]
-                    [ text (toString stats.numberPerPerson)
-                    ]
                 ]
             ]
         ]
