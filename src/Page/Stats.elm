@@ -1,5 +1,6 @@
 module Page.Stats exposing (view)
 
+import Dict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Material.Card as Card
@@ -28,75 +29,36 @@ statCards model =
     List.map (\p -> personCard model p) model.people
 
 
-sun =
-    Color.color Color.Amber Color.S500
-
-
-rain =
-    Color.color Color.LightBlue Color.S500
-
-
-today =
-    [ ( "now", 21, -1, Color.primary, "cloud" )
-    , ( "16", 21, -1, Color.primary, "cloud" )
-    , ( "17", 20, -1, Color.primary, "cloud" )
-    , ( "18", 20, -1, rain, "grain" )
-    , ( "19", 19, -1, rain, "grain" )
-    , ( "20", 19, -1, Color.primary, "cloud_queue" )
-    , ( "21", 28, -1, Color.primary, "cloud_queue" )
-    ]
-
-
-next3 =
-    [ ( "thu", 21, 14, sun, "wb_sunny" )
-    , ( "fri", 22, 15, rain, "grain" )
-    , ( "sat", 20, 13, sun, "wb_sunny" )
-    , ( "sun", 21, 13, rain, "grain" )
-    , ( "mon", 20, 13, rain, "grain" )
-    , ( "tue", 20, 13, sun, "wb_sunny" )
-    , ( "wed", 21, 15, sun, "wb_sunny" )
-    ]
-
-
 cell =
-    css "width" "64px"
+    css "width" "50%"
 
 
-row ( time, high, low, color, icon ) =
+row : ( String, Int ) -> Html Msg
+row stats =
     Card.subhead
         [ css "display" "flex"
         , css "justify-content" "space-between"
         , css "align-items" "center"
         , css "padding" ".3rem 2.5rem"
         ]
-        [ Options.span [ cell ] [ text time ]
-        , Options.span [ cell, css "text-align" "center" ]
-            [ Icon.view icon [ Color.text color, Icon.size18 ] ]
-        , Options.span [ cell, css "text-align" "right" ]
-            [ text <| toString high ++ "° "
-            , Options.span
-                [ css "color" "rgba(0,0,0,0.37)" ]
-                [ text <|
-                    if low >= 0 then
-                        toString low ++ "°"
-                    else
-                        ""
-                ]
-            ]
+        [ Options.span [ cell, css "overflow" "hidden" ] [ text (Tuple.first stats) ]
+        , Options.span [ cell, css "text-align" "right" ] [ text (toString (Tuple.second stats)) ]
         ]
 
 
-list items =
+list : List ( String, Int ) -> List (Html Msg)
+list topthree =
     [ Options.div
         [ css "display" "flex"
         , css "flex-direction" "column"
         , css "padding" "1rem 0"
         , css "color" "rgba(0, 0, 0, 0.54)"
         ]
-        (List.map row items)
+        (List.map row topthree)
     ]
 
 
+personCard : Model -> String -> Html Msg
 personCard model person =
     let
         stats =
@@ -107,31 +69,28 @@ personCard model person =
             [ Elevation.e8, css "width" "100%" ]
             [ Card.title
                 []
-                [ Card.head [] [ text person ]
-
-                , Card.subhead [] [ text ((toString stats.numberPerPerson) ++ "/"  ++ (toString (List.length model.allRequests))) ]
-                , Options.div
-                    [ css "padding" "2rem 2rem 0 2rem" ]
+                [ Card.head []
                     [ Options.span
-                        [ Typography.display4
+                        [ Typography.display2
                         , Color.text Color.primary
                         ]
-                        [ text (percentageToString stats.percentage) ]
+                        [ text person ]
                     ]
                 ]
             , Card.actions []
-                [-- Tabs.render Mdl [5,2] model.mdl
-                 -- [ Tabs.ripple
-                 -- , Tabs.onSelectTab SetTab
-                 -- , Tabs.activeTab model.tab
-                 -- ]
-                 -- [ Tabs.label [] [ text "Today" ]
-                 -- , Tabs.label [] [ text "7-day" ]
-                 -- ]
-                 -- (list (if model.tab == 0 then today else next3))
-                ]
+                (list (topThreeArtists stats))
             , Card.menu []
-                [ Icon.i "music_note" ]
+                [ Options.span
+                    [ Typography.display2
+                    , Color.text Color.primary
+                    ]
+                    [ text (percentageToString stats.percentage) ]
+                    , Layout.spacer
+                    , Options.span [] 
+                    [
+                        text (toString stats.numberPerPerson ++ "/" ++ toString (List.length model.allRequests))
+                    ]
+                ]
             ]
         ]
 
@@ -145,12 +104,33 @@ getStatsForPerson model person =
     { person = person
     , numberPerPerson = numberPerPerson
     , percentage = getPercentage numberPerPerson (List.length model.allRequests)
+    , artistsSongCount = groupAndCount (List.map (\r -> r.artistName) (requestsPerPerson person model.allRequests))
     }
+
+
+groupAndCount : List String -> Dict String Int
+groupAndCount tags =
+    tags
+        |> List.foldr
+            (\tag carry ->
+                Dict.update
+                    tag
+                    (\existingCount ->
+                        case existingCount of
+                            Just existingCount ->
+                                Just (existingCount + 1)
+
+                            Nothing ->
+                                Just 1
+                    )
+                    carry
+            )
+            Dict.empty
 
 
 percentageToString : Float -> String
 percentageToString percentage =
-    (Round.round 2 percentage) ++ "%"
+    Round.round 0 percentage ++ "%"
 
 
 getPercentage : Int -> Int -> Float
@@ -165,6 +145,20 @@ getPercentage number total =
 
 countPerPerson : String -> List SongRequest -> Int
 countPerPerson personName songRequests =
-    songRequests
-        |> List.filter (\r -> r.requesterName == personName)
+    requestsPerPerson personName songRequests
         |> List.length
+
+
+requestsPerPerson : String -> List SongRequest -> List SongRequest
+requestsPerPerson personName allSongRequests =
+    allSongRequests
+        |> List.filter (\r -> r.requesterName == personName)
+
+
+topThreeArtists : Stats -> List ( String, Int )
+topThreeArtists stats =
+    stats.artistsSongCount
+        |> Dict.toList
+        |> List.sortBy Tuple.second
+        |> List.reverse
+        |> List.take 3

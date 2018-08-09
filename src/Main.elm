@@ -1,22 +1,22 @@
 module Main exposing (..)
 
-import Html exposing (..)
-import Html.Lazy
 import Array exposing (Array)
 import Dict exposing (Dict)
-import String
-import Navigation
-import RouteUrl as Routing
+import Html exposing (..)
+import Html.Lazy
+import Material.Color as Color
 import Material.Layout as Layout
-import Material.Options as Options exposing (styled, css)
+import Material.Options as Options exposing (css, styled)
+import Material.Textfield as Textfield
 import Material.Typography as Typography
+import Navigation
 import Page.Requests
 import Page.Stats
-import Types exposing (..)
+import RouteUrl as Routing
 import States exposing (..)
+import String
+import Types exposing (..)
 import Update exposing (update)
-import Material.Textfield as Textfield
-import Material.Color as Color
 
 
 -- APP
@@ -34,6 +34,7 @@ main =
         }
 
 
+
 -- VIEW
 
 
@@ -48,22 +49,22 @@ view_ model =
         top =
             (Array.get model.selectedTab tabViews |> Maybe.withDefault e404) model
     in
-        Layout.render Mdl
-            model.mdl
-            [ Layout.selectedTab model.selectedTab
-            , Layout.onSelectTab SelectTab
-            , Layout.fixedHeader
-            , Layout.seamed
-            , Layout.fixedTabs
-            ]
-            { header = newHeader model
-            , drawer = drawer model
-            , tabs =
-                ( tabTitles
-                , [] 
-                )
-            , main = [ top ]
-            }
+    Layout.render Mdl
+        model.mdl
+        [ Layout.selectedTab model.selectedTab
+        , Layout.onSelectTab SelectTab
+        , Layout.fixedHeader
+        , Layout.seamed
+        , Layout.fixedTabs
+        ]
+        { header = newHeader model
+        , drawer = drawer model
+        , tabs =
+            ( tabTitles
+            , []
+            )
+        , main = [ top ]
+        }
 
 
 tabs : List ( String, String, Model -> Html Msg )
@@ -133,20 +134,19 @@ newHeader model =
         [ Layout.title [] [ text "Song Requests" ]
         , Layout.spacer
         , Layout.navigation []
-            [ 
-                -- Textfield.render Mdl
-                --     [ 29 ]
-                --     model.mdl
-                --     [ Options.onInput SearchSongs
-                --     , Textfield.autofocus
-                --     , Textfield.label "Search"
-                --     , Textfield.text_
-                --     , Textfield.value model.searchSongsString
-                --     , Textfield.expandableIcon "search"
-                --     , Color.text Color.white
-                --     --, Color.background Color.white
-                --     ]
-                --     []
+            [-- Textfield.render Mdl
+             --     [ 29 ]
+             --     model.mdl
+             --     [ Options.onInput SearchSongs
+             --     , Textfield.autofocus
+             --     , Textfield.label "Search"
+             --     , Textfield.text_
+             --     , Textfield.value model.searchSongsString
+             --     , Textfield.expandableIcon "search"
+             --     , Color.text Color.white
+             --     --, Color.background Color.white
+             --     ]
+             --     []
             ]
         ]
     ]

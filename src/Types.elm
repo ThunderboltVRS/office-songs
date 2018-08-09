@@ -3,7 +3,7 @@ module Types exposing (..)
 import Material
 import Random exposing (Seed)
 import Material.Color as Color
-
+import Dict exposing (Dict)
 
 type Msg
     = Mdl (Material.Msg Msg)
@@ -21,10 +21,10 @@ type alias SongRequest =
     }
 
 type alias Stats =
-    {
-    person : String
+    { person : String
     , numberPerPerson : Int
     , percentage : Float
+    , artistsSongCount : Dict String Int
     }
 
 type alias Model =
