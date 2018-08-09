@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Material.Options as Options exposing (Style, css)
 import Material.Table as Table
 import Material.Textfield
-import Material.Typography as Typo
 import Types exposing (..)
 
 
