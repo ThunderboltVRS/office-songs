@@ -1,18 +1,10 @@
-module Types exposing (..)
+module Types exposing (Flags, Model, Msg(..), SongRequest, Stats)
 
 import Dict exposing (Dict)
-import Material
-import Material.Color as Color
-import Random exposing (Seed)
-
 
 type Msg
-    = Mdl (Material.Msg Msg)
-    | SearchSongs String
-    | SearchRequesters String
-    | SelectTab Int
-    | Raise String
-    | Lower String
+    = SearchSongs String
+    | SelectRequester String
 
 
 type alias SongRequest =
@@ -31,20 +23,13 @@ type alias Stats =
 
 
 type alias Model =
-    { mdl : Material.Model
-    , searchSongsString : String
-    , searchRequestersString : String
+    {
+    searchSongsString : String
+    , selectedRequester : String
     , allRequests : List SongRequest
     , searchedRequests : List SongRequest
     , people : List String
     , showPercentages : Bool
-    , randomSeed : Random.Seed
-    , selectedTab : Int
-    , raisedId : String
-    , primaryColor : Color.Hue
-    , accentColor : Color.Hue
-    , primaryShade : Color.Shade
-    , accentShade : Color.Shade
     }
 
 

@@ -1,6 +1,5 @@
-module Update exposing (..)
+module Update exposing (update)
 
-import Material
 import Regex
 import Types exposing (..)
 
@@ -8,23 +7,12 @@ import Types exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Types.Mdl msg ->
-            Material.update Mdl msg model
 
         SearchSongs searchText ->
             ( updateSongSearchString model searchText |> filterResultsOnSearch, Cmd.none )
 
-        SearchRequesters searchText ->
-            ( updateRequesterSearchString model searchText |> filterResultsOnSearch, Cmd.none )
-
-        SelectTab k ->
-            ( { model | selectedTab = k }, Cmd.none )
-
-        Raise k ->
-            { model | raisedId = k } ! []
-
-        Lower k ->
-            { model | raisedId = k } ! [] 
+        SelectRequester requester ->
+            ( updateSelectedRequesterString model requester |> filterResultsOnSearch, Cmd.none )
 
 
 updateSongSearchString : Model -> String -> Model
@@ -32,22 +20,24 @@ updateSongSearchString model searchText =
     { model | searchSongsString = searchText }
 
 
-updateRequesterSearchString : Model -> String -> Model
-updateRequesterSearchString model searchText =
-    { model | searchRequestersString = searchText }
+updateSelectedRequesterString : Model -> String -> Model
+updateSelectedRequesterString model requester =
+    { model | selectedRequester = requester }
 
 
 filterResultsOnSearch : Model -> Model
 filterResultsOnSearch model =
-    { model | searchedRequests = List.filter (\i -> matchesSearch i model.searchSongsString model.searchRequestersString) model.allRequests }
+    { model | searchedRequests = List.filter (\i -> matchesSearch i model.searchSongsString model.selectedRequester) model.allRequests }
 
 
 matchesSearch : SongRequest -> String -> String -> Bool
-matchesSearch songRequest searchSongsText searchRequestersText =
+matchesSearch songRequest searchSongsText selectedRequester =
     (match searchSongsText songRequest.artistName || match searchSongsText songRequest.songName)
-        && (searchRequestersText == "" || match searchRequestersText songRequest.requesterName)
+        && (selectedRequester == "Everyone" || match selectedRequester songRequest.requesterName)
 
 
 match : String -> String -> Bool
 match conatined inside =
-    Regex.contains (Regex.caseInsensitive (Regex.regex conatined)) inside
+    let regex = Maybe.withDefault Regex.never <| Regex.fromStringWith { caseInsensitive = True, multiline = False} conatined
+    in
+        Regex.contains regex inside
