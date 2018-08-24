@@ -15,18 +15,37 @@ view =
 view_ : Model -> Html Msg
 view_ model =
     div []
-        [  mainTabs model
-        , div[class "section"] [ searchAndFilter model ]
-        , results model
-        ]
+        (List.append (header model) (tabContent model))
+
+
+header : Model -> List (Html Msg)
+header model =
+    [ 
+    --     div
+    --     [ class "level" ]
+    --     [ div[class "level-item"][ text "Song Requests"]
+    --      ]
+    -- , 
+    mainTabs model
+    ]
+
+
+tabContent : Model -> List (Html Msg)
+tabContent model =
+    case model.selectedTab of
+        RequestsTab ->
+            requestTabContent model
+
+        StatsTab ->
+            statsTabContent model
 
 
 mainTabs : Model -> Html Msg
 mainTabs model =
     div [ class "tabs is-toggle is-fullwidth is-large" ]
         [ ul []
-            [ li [ class "is-active" ]
-                [ a []
+            [ li [ class (tabClass model RequestsTab) ]
+                [ a [ onClick (TabSelected RequestsTab) ]
                     [ span [ class "icon" ]
                         [ i [ attribute "aria-hidden" "true", class "fas fa-music" ]
                             []
@@ -35,8 +54,8 @@ mainTabs model =
                         [ text "Requests" ]
                     ]
                 ]
-            , li []
-                [ a []
+            , li [ class (tabClass model StatsTab) ]
+                [ a [ onClick (TabSelected StatsTab) ]
                     [ span [ class "icon" ]
                         [ i [ attribute "aria-hidden" "true", class "fas fa-chart-bar" ]
                             []
@@ -49,16 +68,37 @@ mainTabs model =
         ]
 
 
+tabClass : Model -> TabType -> String
+tabClass model tabType =
+    if model.selectedTab == tabType then
+        "is-active"
+
+    else
+        ""
+
+
+requestTabContent : Model -> List (Html Msg)
+requestTabContent model =
+    [ div [ class "section" ] [ searchAndFilter model ]
+    , results model
+    ]
+
+
+statsTabContent : Model -> List (Html Msg)
+statsTabContent model =
+    []
+
+
 results : Model -> Html Msg
 results model =
     table [ class "table is-bordered is-striped is-narrow is-hoverable is-fullwidth" ]
         [ thead []
             [ tr []
-                [ th [style "width" "33%"]
+                [ th [ style "width" "33%" ]
                     [ text "Song" ]
-                , th [style "width" "33%"]
+                , th [ style "width" "33%" ]
                     [ text "Artist" ]
-                , th [style "width" "33%"]
+                , th [ style "width" "33%" ]
                     [ text "Requester" ]
                 ]
             ]
@@ -67,9 +107,9 @@ results model =
                 |> List.map
                     (\request ->
                         tr []
-                            [ td [style "width" "33%"] [ Html.text request.songName ]
-                            , td [style "width" "33%"] [ Html.text request.artistName ]
-                            , td [style "width" "33%"] [ Html.text request.requesterName ]
+                            [ td [ style "width" "33%" ] [ Html.text request.songName ]
+                            , td [ style "width" "33%" ] [ Html.text request.artistName ]
+                            , td [ style "width" "33%" ] [ Html.text request.requesterName ]
                             ]
                     )
             )

@@ -11,7 +11,7 @@ initialModelWithFlags flags =
 
 initialModel : Flags -> Model
 initialModel flags =
-    { searchSongsString = ""
+    { searchString = ""
     , selectedRequester = "Everyone"
     , allRequests = flags.requests
     , searchedRequests = flags.requests
@@ -20,6 +20,7 @@ initialModel flags =
             |> List.map .requesterName
             |> unique
     , showPercentages = flags.showPercentages
+    , selectedTab = RequestsTab
     }
 
 

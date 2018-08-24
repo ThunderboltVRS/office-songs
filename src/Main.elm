@@ -21,5 +21,4 @@ main =
         , subscriptions = subscriptions
         , update = update
         , view = View.view
-        
         }

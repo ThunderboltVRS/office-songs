@@ -1,10 +1,16 @@
-module Types exposing (Flags, Model, Msg(..), SongRequest, Stats)
+module Types exposing (..)
 
 import Dict exposing (Dict)
 
 type Msg
     = SearchSongs String
     | SelectRequester String
+    | TabSelected TabType
+
+
+type TabType
+    = RequestsTab
+    | StatsTab
 
 
 type alias SongRequest =
@@ -24,12 +30,13 @@ type alias Stats =
 
 type alias Model =
     {
-    searchSongsString : String
+    searchString : String
     , selectedRequester : String
     , allRequests : List SongRequest
     , searchedRequests : List SongRequest
     , people : List String
     , showPercentages : Bool
+    , selectedTab : TabType
     }
 
 

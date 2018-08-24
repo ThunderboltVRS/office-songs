@@ -14,10 +14,12 @@ update msg model =
         SelectRequester requester ->
             ( updateSelectedRequesterString model requester |> filterResultsOnSearch, Cmd.none )
 
+        TabSelected tab ->
+            ( { model | selectedTab = tab }, Cmd.none)
 
 updateSongSearchString : Model -> String -> Model
 updateSongSearchString model searchText =
-    { model | searchSongsString = searchText }
+    { model | searchString = searchText }
 
 
 updateSelectedRequesterString : Model -> String -> Model
@@ -27,7 +29,7 @@ updateSelectedRequesterString model requester =
 
 filterResultsOnSearch : Model -> Model
 filterResultsOnSearch model =
-    { model | searchedRequests = List.filter (\i -> matchesSearch i model.searchSongsString model.selectedRequester) model.allRequests }
+    { model | searchedRequests = List.filter (\i -> matchesSearch i model.searchString model.selectedRequester) model.allRequests }
 
 
 matchesSearch : SongRequest -> String -> String -> Bool
