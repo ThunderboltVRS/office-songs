@@ -20,11 +20,11 @@ type alias SongRequest =
     }
 
 
-type alias Stats =
+type alias PersonStats =
     { person : String
     , numberPerPerson : Int
     , percentage : Float
-    , artistsSongCount : Dict String Int
+    , artistsSongCount : List (String, Int)
     }
 
 
@@ -37,6 +37,7 @@ type alias Model =
     , people : List String
     , showPercentages : Bool
     , selectedTab : TabType
+    , personStats : List( PersonStats )
     }
 
 
