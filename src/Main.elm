@@ -1,9 +1,9 @@
 module Main exposing (main)
 
+import Browser exposing (..)
 import States exposing (..)
 import Types exposing (..)
 import Update exposing (update)
-import Browser exposing (..)
 import View exposing (view)
 
 

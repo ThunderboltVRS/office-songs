@@ -7,24 +7,14 @@ import Types exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-
         SearchSongs searchText ->
-            ( updateSongSearchString model searchText |> filterResultsOnSearch, Cmd.none )
+            ( { model | searchString = searchText } |> filterResultsOnSearch, Cmd.none )
 
         SelectRequester requester ->
-            ( updateSelectedRequesterString model requester |> filterResultsOnSearch, Cmd.none )
+            ( { model | selectedRequester = requester } |> filterResultsOnSearch, Cmd.none )
 
         TabSelected tab ->
-            ( { model | selectedTab = tab }, Cmd.none)
-
-updateSongSearchString : Model -> String -> Model
-updateSongSearchString model searchText =
-    { model | searchString = searchText }
-
-
-updateSelectedRequesterString : Model -> String -> Model
-updateSelectedRequesterString model requester =
-    { model | selectedRequester = requester }
+            ( { model | selectedTab = tab }, Cmd.none )
 
 
 filterResultsOnSearch : Model -> Model
@@ -40,6 +30,8 @@ matchesSearch songRequest searchSongsText selectedRequester =
 
 match : String -> String -> Bool
 match conatined inside =
-    let regex = Maybe.withDefault Regex.never <| Regex.fromStringWith { caseInsensitive = True, multiline = False} conatined
+    let
+        regex =
+            Maybe.withDefault Regex.never <| Regex.fromStringWith { caseInsensitive = True, multiline = False } conatined
     in
-        Regex.contains regex inside
+    Regex.contains regex inside

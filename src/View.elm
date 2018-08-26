@@ -1,12 +1,12 @@
 module View exposing (view)
 
+import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
-import Types exposing (..)
 import Round
-import Dict exposing (Dict)
+import Types exposing (..)
 
 
 view : Model -> Html Msg
@@ -22,13 +22,12 @@ view_ model =
 
 header : Model -> List (Html Msg)
 header model =
-    [ 
-    --     div
-    --     [ class "level" ]
-    --     [ div[class "level-item"][ text "Song Requests"]
-    --      ]
-    -- , 
-    mainTabs model
+    [ --     div
+      --     [ class "level" ]
+      --     [ div[class "level-item"][ text "Song Requests"]
+      --      ]
+      -- ,
+      mainTabs model
     ]
 
 
@@ -78,7 +77,10 @@ tabClass model tabType =
     else
         ""
 
+
+
 -- REQUESTS
+
 
 requestTabContent : Model -> List (Html Msg)
 requestTabContent model =
@@ -151,49 +153,43 @@ peopleOptions model =
             ]
 
 
+
 -- STATS
+
 
 statsTabContent : Model -> List (Html Msg)
 statsTabContent model =
-    [
-        section [ class "section" ]
-    [ 
-         
-            h1 [ class "title" ]
-                [ text ((String.fromInt (List.length model.allRequests)) ++ " Songs") ]
-            
-        
+    [ section [ class "section" ]
+        [ h1 [ class "title" ]
+            [ text (String.fromInt (List.length model.allRequests) ++ " Songs") ]
+        ]
+    , div [ class "columns is-multiline" ]
+        (List.map (\ps -> personStatsCard ps) model.personStats)
     ]
-    ,
-        
-        div [ class "columns is-multiline" ]
-    (List.map (\ps -> personStatsCard ps) model.personStats)]
-    
-    
 
 
 personStatsCard : PersonStats -> Html Msg
 personStatsCard personStats =
-    div [ class "column is-4" ][
-    div [ class "card" ]
-    [ div [ class "card-content" ]
-        [ div [ class "media" ]
-            [ div [ class "media-content" ]
-                [ p [ class "title is-4" ]
-                    [ text personStats.person ]
-                , p [ class "subtitle is-6" ]
-                    [ text (percentageToString personStats.percentage)  ]
+    div [ class "column is-4" ]
+        [ div [ class "card" ]
+            [ div [ class "card-content" ]
+                [ div [ class "media" ]
+                    [ div [ class "media-content" ]
+                        [ p [ class "title is-4" ]
+                            [ text personStats.person ]
+                        , p [ class "subtitle is-6" ]
+                            [ text (percentageToString personStats.percentage) ]
+                        ]
+                    ]
+                , div [ class "content" ]
+                    [ topArtistsTable (topThreeArtists personStats)
+                    ]
                 ]
             ]
-        , div [ class "content" ]
-            [
-                topArtistsTable (topThreeArtists personStats)
-            ]
         ]
-    ]
-    ]
 
-topArtistsTable : List(String, Int) -> Html Msg
+
+topArtistsTable : List ( String, Int ) -> Html Msg
 topArtistsTable topArtists =
     table [ class "table is-bordered is-striped is-narrow is-hoverable is-fullwidth" ]
         [ tbody []
@@ -207,6 +203,7 @@ topArtistsTable topArtists =
                     )
             )
         ]
+
 
 topThreeArtists : PersonStats -> List ( String, Int )
 topThreeArtists stats =

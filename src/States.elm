@@ -53,7 +53,7 @@ getStatsForPerson allRequests person =
     }
 
 
-sortedList : Dict String Int ->  List (String, Int)
+sortedList : Dict String Int -> List ( String, Int )
 sortedList dict =
     dict
         |> Dict.toList
