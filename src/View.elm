@@ -22,13 +22,49 @@ view_ model =
 
 header : Model -> List (Html Msg)
 header model =
-    [ --     div
-      --     [ class "level" ]
-      --     [ div[class "level-item"][ text "Song Requests"]
-      --      ]
-      -- ,
-      mainTabs model
+    [ mainTabs model
+    , modal model
     ]
+
+
+-- navbar : Model -> Html Msg
+-- navbar model =
+--     nav [ attribute "aria-label" "main navigation", class "navbar is-fixed-top", attribute "role" "navigation" ]
+--         [ div [ class "navbar-brand" ]
+--             [ div [ class "navbar-item" ]
+--                 [ span [ class "icon is-medium" ]
+--                     [ i [ class "fas fa-lg fa-headphones-alt" ]
+--                         []
+--                     ]
+--                 , h4 [ class "title" ] [ text "Song Requests" ]
+--                 ]
+--                 -- hamburger
+--             -- , a [ attribute "aria-expanded" "false", attribute "aria-label" "menu", class "navbar-burger", attribute "role" "button" ]
+--             --     [ span [ attribute "aria-hidden" "true" ]
+--             --         []
+--             --     , span [ attribute "aria-hidden" "true" ]
+--             --         []
+--             --     , span [ attribute "aria-hidden" "true" ]
+--             --         []
+--             --     ]
+--             ]
+--         , div [ class "navbar-end" ]
+--             [ div [ class "navbar-item" ]
+--                 [ div [ class "field is-grouped" ]
+--                     [ p [ class "control" ]
+--                         [ a [ class "button is-info", href "https://github.com/ThunderboltVRS/office-songs" ]
+--                             [ span [ class "icon" ]
+--                                 [ i [ class "fab fa-github" ]
+--                                     []
+--                                 ]
+--                             , span []
+--                                 [ text "GitHub" ]
+--                             ]
+--                         ]
+--                     ]
+--                 ]
+--             ]
+--         ]
 
 
 tabContent : Model -> List (Html Msg)
@@ -84,8 +120,8 @@ tabClass model tabType =
 
 requestTabContent : Model -> List (Html Msg)
 requestTabContent model =
-    [ div [ class "section" ] [ searchAndFilter model ]
-    , results model
+    [ div [ class "container is-fluid" ] [ searchAndFilter model ]
+    , div [ class "container is-fluid", style "padding-top" "20px" ] [ results model ]
     ]
 
 
@@ -159,25 +195,42 @@ peopleOptions model =
 
 statsTabContent : Model -> List (Html Msg)
 statsTabContent model =
-    [ section [ class "section" ]
-        [ h1 [ class "title" ]
-            [ text (String.fromInt (List.length model.allRequests) ++ " Songs") ]
+    [ h1 [ class "title", style "text-align" "center" ]
+        [ text ("Total Songs: " ++ String.fromInt (List.length model.allRequests)) ]
+    , section [ class "hero is-primary" ]
+        [ div [ class "hero-body" ]
+            [ div [ class "container" ]
+                [ h1 [ class "title" ]
+                    [ text "Stats By Person" ]
+                ]
+            ]
         ]
-    , div [ class "columns is-multiline" ]
-        (List.map (\ps -> personStatsCard ps) model.personStats)
+    , div [ class "container is-fluid", style "padding-top" "20px" ]
+        [ div [ class "columns is-multiline" ]
+            (List.map (\ps -> shortPersonStatsCard ps) model.personStats)
+        ]
+    , section [ class "hero is-primary" ] [div [ class "hero-body" ]
+        [ div [ class "container" ]
+            [ h1 [ class "title" ]
+                [ text "Coming Soon ... All Stats" ]
+            ]
+        ]
+    ]
     ]
 
 
-personStatsCard : PersonStats -> Html Msg
-personStatsCard personStats =
-    div [ class "column is-4" ]
+shortPersonStatsCard : PersonStats -> Html Msg
+shortPersonStatsCard personStats =
+    div [ class "column is-6" ]
         [ div [ class "card" ]
             [ div [ class "card-content" ]
                 [ div [ class "media" ]
                     [ div [ class "media-content" ]
-                        [ p [ class "title is-4" ]
+                        [ p [ class "title is-3" ]
                             [ text personStats.person ]
-                        , p [ class "subtitle is-6" ]
+                        ]
+                    , div [ class "media-right" ]
+                        [ p [ class "subtitle is-4" ]
                             [ text (percentageToString personStats.percentage) ]
                         ]
                     ]
@@ -185,14 +238,59 @@ personStatsCard personStats =
                     [ topArtistsTable (topThreeArtists personStats)
                     ]
                 ]
+            , footer [ class "card-footer" ]
+                [ div [ class "card-footer-item" ]
+                    [ a [ class "button is-link is-outlined", onClick (ShowMoreStats personStats.person) ]
+                        [ span []
+                            [ text "More" ]
+                        , span [ class "icon" ]
+                            [ i [ class "fas fa-caret-square-down" ]
+                                []
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+
+findPersonStats : String -> Model -> Maybe PersonStats
+findPersonStats person model =
+    List.filter (\p -> p.person == person) model.personStats
+        |> List.head
+
+
+fullPersonStatsCard : PersonStats -> Html Msg
+fullPersonStatsCard personStats =
+    div [ class "card" ]
+        [ div [ class "card-content" ]
+            [ div [ class "media" ]
+                [ div [ class "media-content" ]
+                    [ p [ class "title is-3" ]
+                        [ text personStats.person ]
+                    ]
+                , div [ class "media-right" ]
+                    [ p [ class "subtitle is-4" ]
+                        [ text (percentageToString personStats.percentage) ]
+                    ]
+                ]
+            , div [ class "content" ]
+                [ topArtistsTable personStats.artistsSongCount
+                ]
             ]
         ]
 
 
 topArtistsTable : List ( String, Int ) -> Html Msg
 topArtistsTable topArtists =
-    table [ class "table is-bordered is-striped is-narrow is-hoverable is-fullwidth" ]
-        [ tbody []
+    table [ class "table is-narrow" ]
+        [ thead []
+            [ tr []
+                [ th [] [ text "Artist" ]
+                , th [] [ text "Count" ]
+                ]
+            ]
+        , tbody []
             (topArtists
                 |> List.map
                     (\t ->
@@ -203,6 +301,30 @@ topArtistsTable topArtists =
                     )
             )
         ]
+
+
+modal : Model -> Html Msg
+modal model =
+    case model.modalState of
+        Shown person ->
+            div
+                [ onClick CloseModalStats
+                , class "modal is-active"
+                ]
+                [ div [ class "modal-background" ]
+                    []
+                , div [ class "modal-content" ]
+                    [ Maybe.withDefault (div [] [])
+                        (findPersonStats person model
+                            |> Maybe.map fullPersonStatsCard
+                        )
+                    ]
+                , button [ attribute "aria-label" "close", class "modal-close is-large" ]
+                    []
+                ]
+
+        NotShown ->
+            div [ class "modal" ] []
 
 
 topThreeArtists : PersonStats -> List ( String, Int )

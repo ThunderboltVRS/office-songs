@@ -26,6 +26,7 @@ initialModel flags =
     , showPercentages = flags.showPercentages
     , selectedTab = RequestsTab
     , personStats = getAllPersonStats people flags.requests
+    , modalState = NotShown
     }
 
 

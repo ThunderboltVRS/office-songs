@@ -14,7 +14,13 @@ update msg model =
             ( { model | selectedRequester = requester } |> filterResultsOnSearch, Cmd.none )
 
         TabSelected tab ->
-            ( { model | selectedTab = tab }, Cmd.none )
+            ( { model | selectedTab = tab, selectedRequester = "Everyone", searchedRequests = model.allRequests }, Cmd.none )
+
+        ShowMoreStats person ->
+            ( { model | modalState = Shown person }, Cmd.none )
+
+        CloseModalStats ->
+            ( { model | modalState = NotShown }, Cmd.none )
 
 
 filterResultsOnSearch : Model -> Model

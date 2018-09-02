@@ -1,4 +1,4 @@
-module Types exposing (Flags, Model, Msg(..), PersonStats, SongRequest, TabType(..))
+module Types exposing (Flags, ModalState(..), Model, Msg(..), PersonStats, SongRequest, TabType(..))
 
 import Dict exposing (Dict)
 
@@ -7,6 +7,8 @@ type Msg
     = SearchSongs String
     | SelectRequester String
     | TabSelected TabType
+    | ShowMoreStats String
+    | CloseModalStats
 
 
 type TabType
@@ -19,6 +21,11 @@ type alias SongRequest =
     , artistName : String
     , songName : String
     }
+
+
+type ModalState
+    = NotShown
+    | Shown String
 
 
 type alias PersonStats =
@@ -38,6 +45,7 @@ type alias Model =
     , showPercentages : Bool
     , selectedTab : TabType
     , personStats : List PersonStats
+    , modalState : ModalState
     }
 
 
