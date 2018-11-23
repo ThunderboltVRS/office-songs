@@ -4,18 +4,12 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Html.Lazy
 import Round
 import Types exposing (..)
 
 
 view : Model -> Html Msg
-view =
-    Html.Lazy.lazy view_
-
-
-view_ : Model -> Html Msg
-view_ model =
+view model =
     div []
         (List.append (header model) (tabContent model))
 
@@ -25,46 +19,6 @@ header model =
     [ mainTabs model
     , modal model
     ]
-
-
--- navbar : Model -> Html Msg
--- navbar model =
---     nav [ attribute "aria-label" "main navigation", class "navbar is-fixed-top", attribute "role" "navigation" ]
---         [ div [ class "navbar-brand" ]
---             [ div [ class "navbar-item" ]
---                 [ span [ class "icon is-medium" ]
---                     [ i [ class "fas fa-lg fa-headphones-alt" ]
---                         []
---                     ]
---                 , h4 [ class "title" ] [ text "Song Requests" ]
---                 ]
---                 -- hamburger
---             -- , a [ attribute "aria-expanded" "false", attribute "aria-label" "menu", class "navbar-burger", attribute "role" "button" ]
---             --     [ span [ attribute "aria-hidden" "true" ]
---             --         []
---             --     , span [ attribute "aria-hidden" "true" ]
---             --         []
---             --     , span [ attribute "aria-hidden" "true" ]
---             --         []
---             --     ]
---             ]
---         , div [ class "navbar-end" ]
---             [ div [ class "navbar-item" ]
---                 [ div [ class "field is-grouped" ]
---                     [ p [ class "control" ]
---                         [ a [ class "button is-info", href "https://github.com/ThunderboltVRS/office-songs" ]
---                             [ span [ class "icon" ]
---                                 [ i [ class "fab fa-github" ]
---                                     []
---                                 ]
---                             , span []
---                                 [ text "GitHub" ]
---                             ]
---                         ]
---                     ]
---                 ]
---             ]
---         ]
 
 
 tabContent : Model -> List (Html Msg)
@@ -195,28 +149,12 @@ peopleOptions model =
 
 statsTabContent : Model -> List (Html Msg)
 statsTabContent model =
-    [ h1 [ class "title", style "text-align" "center" ]
-        [ text ("Total Songs: " ++ String.fromInt (List.length model.allRequests)) ]
-    , section [ class "hero is-primary" ]
-        [ div [ class "hero-body" ]
-            [ div [ class "container" ]
-                [ h1 [ class "title" ]
-                    [ text "Stats By Person" ]
-                ]
-            ]
-        ]
-    , div [ class "container is-fluid", style "padding-top" "20px" ]
+    [ div [ class "container is-fluid", style "padding-top" "20px" ]
         [ div [ class "columns is-multiline" ]
             (List.map (\ps -> shortPersonStatsCard ps) model.personStats)
         ]
-    , section [ class "hero is-primary" ] [div [ class "hero-body" ]
-        [ div [ class "container" ]
-            [ h1 [ class "title" ]
-                [ text "Coming Soon ... All Stats" ]
-            ]
-        ]
     ]
-    ]
+    
 
 
 shortPersonStatsCard : PersonStats -> Html Msg
